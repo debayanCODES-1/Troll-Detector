@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+logs/
+server/logs/
+models/*.onnx
+models/checkpoint*/
+models/tokenizer/
+data/raw/
+.DS_Store

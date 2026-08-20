@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "CivilDialog",
+  "version": "2.0.0",
+  "description": "Local checks for blocked language and personal attacks before comments are posted.",
+  "permissions": ["storage"],
+  "host_permissions": ["*://*.youtube.com/*", "*://*.x.com/*", "*://*.instagram.com/*", "http://127.0.0.1:8787/*"],
+  "background": {"service_worker": "background.js"},
+  "action": {"default_popup": "popup/popup.html"},
+  "content_scripts": [
+    {"matches": ["*://*.youtube.com/*"], "js": ["shared/platform-adapter.js", "shared/ui.js", "content-scripts/youtube.js"], "run_at": "document_idle"},
+    {"matches": ["*://*.x.com/*"], "js": ["shared/platform-adapter.js", "shared/ui.js", "content-scripts/x.js"], "run_at": "document_idle"},
+    {"matches": ["*://*.instagram.com/*"], "js": ["shared/platform-adapter.js", "shared/ui.js", "content-scripts/instagram.js"], "run_at": "document_idle"}
+  ]
+}
