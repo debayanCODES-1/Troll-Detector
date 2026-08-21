@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CivilDialog</title>
+	<style>
+		:root {
+			color-scheme: light;
+			--ink: #17212b;
+			--muted: #66727d;
+			--line: rgba(255, 255, 255, .72);
+			--teal: #087f8c;
+			--teal-dark: #075e69;
+		}
+		* { box-sizing: border-box; }
+		body {
+			width: 320px;
+			min-height: 360px;
+			margin: 0;
+			padding: 18px;
+			overflow: hidden;
+			color: var(--ink);
+			font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			background: radial-gradient(circle at 12% 5%, #fff5d7 0 22%, transparent 45%), linear-gradient(145deg, #dceff0, #f3e6dc 72%);
+		}
+		main {
+			position: relative;
+			min-height: 324px;
+			padding: 20px;
+			border: 1px solid var(--line);
+			border-radius: 22px;
+			background: rgba(255, 255, 255, .47);
+			box-shadow: 0 18px 45px rgba(28, 65, 72, .18), inset 0 1px rgba(255, 255, 255, .8);
+			backdrop-filter: blur(18px);
+		}
+		.eyebrow { margin: 0 0 8px; color: var(--teal-dark); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+		h1 { margin: 0; font: 700 28px/1.05 Georgia, "Times New Roman", serif; letter-spacing: 0; }
+		.subtitle { max-width: 220px; margin: 9px 0 22px; color: var(--muted); }
+		.section-label { margin: 0 0 8px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+		.row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 0; border-top: 1px solid rgba(255, 255, 255, .7); cursor: pointer; }
+		.row-copy { display: grid; gap: 2px; }
+		.row-title { font-weight: 650; }
+		.row-detail { color: var(--muted); font-size: 11px; }
+		input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+		.switch { position: relative; flex: 0 0 auto; width: 39px; height: 23px; border-radius: 99px; background: rgba(91, 105, 112, .32); transition: background .18s ease; }
+		.switch::after { content: ""; position: absolute; top: 3px; left: 3px; width: 17px; height: 17px; border-radius: 50%; background: #fff; box-shadow: 0 2px 5px rgba(28, 49, 53, .22); transition: transform .18s ease; }
+		input:checked + .switch { background: var(--teal); }
+		input:checked + .switch::after { transform: translateX(16px); }
+		input:focus-visible + .switch { outline: 3px solid rgba(8, 127, 140, .25); outline-offset: 2px; }
+		.status { display: flex; align-items: center; gap: 9px; margin-top: 20px; padding: 11px 12px; border: 1px solid rgba(255,255,255,.7); border-radius: 12px; color: var(--muted); background: rgba(255,255,255,.3); font-size: 11px; }
+		.dot { width: 8px; height: 8px; border-radius: 50%; background: #d18447; box-shadow: 0 0 0 4px rgba(209, 132, 71, .13); }
+		.dot.ok { background: #218c68; box-shadow: 0 0 0 4px rgba(33, 140, 104, .13); }
+		.dot.error { background: #c04f4f; box-shadow: 0 0 0 4px rgba(192, 79, 79, .13); }
+		footer { margin-top: 13px; color: rgba(23, 33, 43, .48); font-size: 10px; }
+	</style>
+</head>
+<body>
+	<main>
+		<p class="eyebrow">Local moderation</p>
+		<h1>CivilDialog</h1>
+		<p class="subtitle">Keep replies focused on ideas, not people.</p>
+		<p class="section-label">Active checks</p>
+		<label class="row" for="wordFilter">
+			<span class="row-copy"><span class="row-title">Word filter</span><span class="row-detail">Block configured terms</span></span>
+			<input id="wordFilter" type="checkbox" aria-label="Enable word filter"><span class="switch" aria-hidden="true"></span>
+		</label>
+		<label class="row" for="fallacyDetection">
+			<span class="row-copy"><span class="row-title">Personal attack check</span><span class="row-detail">Review the tone locally</span></span>
+			<input id="fallacyDetection" type="checkbox" aria-label="Enable personal attack check"><span class="switch" aria-hidden="true"></span>
+		</label>
+		<div class="status" role="status" aria-live="polite"><span id="dot" class="dot"></span><span id="status">Checking local server...</span></div>
+		<footer>Nothing leaves this device.</footer>
+	</main>
+	<script src="popup.js"></script>
+</body>
+</html>
