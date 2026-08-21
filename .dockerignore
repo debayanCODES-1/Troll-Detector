@@ -1,0 +1,10 @@
+.git
+.venv
+__pycache__
+*.pyc
+logs
+extension
+data
+train.py
+export_onnx.py
+models/checkpoint

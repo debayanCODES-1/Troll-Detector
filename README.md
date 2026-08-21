@@ -15,10 +15,21 @@ python3 -m venv .venv
 . .venv/bin/activate
 pip install -r requirements.txt
 python -m data.prepare_dataset --input-dir data/raw
-uvicorn server.main:app --host 127.0.0.1 --port 8787
+python -m uvicorn server.main:app --host 127.0.0.1 --port 8787
 ```
 
 On Windows, run `run_server.bat` after installing requirements in `.venv`. Load `extension/` from `chrome://extensions` with Developer mode enabled. The popup stores each toggle in `chrome.storage.sync` and reports local server liveness.
+
+## Deployment
+
+For a repeatable local deployment, build and start the inference service with Docker:
+
+```bash
+docker compose up --build -d
+curl http://127.0.0.1:8787/health
+```
+
+The compose file publishes the service only on loopback, which matches the extension's configured API target. The model files under `models/` are copied into the image when present; without an ONNX artifact the service remains usable with its documented development fallback. Stop it with `docker compose down`.
 
 ## Data and model
 
