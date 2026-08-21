@@ -18,6 +18,15 @@ python -m data.prepare_dataset --input-dir data/raw
 python -m uvicorn server.main:app --host 127.0.0.1 --port 8787
 ```
 
+The trained ONNX classifier and tokenizer are included through Git LFS. After cloning, install Git LFS and pull the release artifacts before starting the server:
+
+```bash
+git lfs install
+git lfs pull
+test -f models/fallacy_classifier.onnx
+test -f models/tokenizer/tokenizer.json
+```
+
 On Windows, run `run_server.bat` after installing requirements in `.venv`. Load `extension/` from `chrome://extensions` with Developer mode enabled. The popup stores each toggle in `chrome.storage.sync` and reports local server liveness.
 
 ## Deployment
@@ -25,11 +34,12 @@ On Windows, run `run_server.bat` after installing requirements in `.venv`. Load 
 For a repeatable local deployment, build and start the inference service with Docker:
 
 ```bash
+git lfs pull
 docker compose up --build -d
 curl http://127.0.0.1:8787/health
 ```
 
-The compose file publishes the service only on loopback, which matches the extension's configured API target. The model files under `models/` are copied into the image when present; without an ONNX artifact the service remains usable with its documented development fallback. Stop it with `docker compose down`.
+The compose file publishes the service only on loopback, which matches the extension's configured API target. Because the model is tracked with Git LFS, a normal clone followed by `git lfs pull` automatically provides the ONNX artifact and tokenizer before Docker copies them into the image. Stop it with `docker compose down`.
 
 ## Data and model
 

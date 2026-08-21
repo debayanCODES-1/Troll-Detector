@@ -4,9 +4,7 @@ __pycache__/
 .env
 logs/
 server/logs/
-models/*.onnx
 models/checkpoint*/
-models/tokenizer/
 models/explainer/
 data/raw/
 extension/tests/node_modules/
