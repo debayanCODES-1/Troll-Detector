@@ -41,7 +41,7 @@ def main() -> None:
     encoded = encoded.rename_column("label", "labels")
     encoded.set_format("torch", columns=["input_ids", "attention_mask", "labels"])
     model = AutoModelForSequenceClassification.from_pretrained(args.model, num_labels=2)
-    training = TrainingArguments(output_dir=str(args.output_dir), eval_strategy="epoch", save_strategy="epoch", load_best_model_at_end=True, metric_for_best_model="f1", greater_is_better=True, logging_strategy="epoch", report_to=[])
+    training = TrainingArguments(output_dir=str(args.output_dir), eval_strategy="epoch", save_strategy="epoch", load_best_model_at_end=True, metric_for_best_model="f1", greater_is_better=True, logging_strategy="epoch", report_to=[], num_train_epochs=1)
     trainer = Trainer(model=model, args=training, train_dataset=encoded["train"], eval_dataset=encoded["val"], compute_metrics=metrics, tokenizer=tokenizer)
     trainer.train()
     validation = trainer.predict(encoded["val"])
