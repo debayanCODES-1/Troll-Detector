@@ -1,9 +1,10 @@
 (() => {
+  const isReply = container => /replying to|reply to/i.test(container?.innerText || '') || Boolean(container?.querySelector('[data-testid="replyingTo"]'));
   const adapter = {
     getCommentBox: button => {
       const container = button?.closest('[role="dialog"], form, [data-testid="toolBar"]') || document;
-      const box = container.querySelector('[data-testid^="tweetTextarea"]');
-      return box && /replying to/i.test(container.innerText || '') ? box : null;
+      const box = container.querySelector('[data-testid^="tweetTextarea"], [contenteditable="true"][role="textbox"]');
+      return box && isReply(container) ? box : null;
     },
     getSubmitButton: target => target?.closest('[data-testid$="tweetButtonInline"], [data-testid$="tweetButton"]'),
     getCommentText: box => box?.value || box?.innerText || '',

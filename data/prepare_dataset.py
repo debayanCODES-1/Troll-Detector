@@ -4,11 +4,12 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import json
 import random
 from pathlib import Path
 
 POSITIVE_FIELDS = ("insult", "identity_hate", "ad_hominem", "ad hominem", "fallacy")
-TEXT_FIELDS = ("text", "comment_text", "comment", "sentence", "argument", "body")
+TEXT_FIELDS = ("text", "comment_text", "comment", "sentence", "argument", "body", "source_article")
 
 
 def _value(row: dict[str, str], names: tuple[str, ...]) -> str:
@@ -21,6 +22,8 @@ def _value(row: dict[str, str], names: tuple[str, ...]) -> str:
 
 def _label(row: dict[str, str], source: str) -> int | None:
     lowered = {str(k).strip().lower(): (v or "").strip().lower() for k, v in row.items()}
+    if "logical_fallacies" in lowered:
+        return int("ad hominem" in lowered["logical_fallacies"].replace("_", " "))
     if "cmv" in source.lower():
         return 0
     if "jigsaw" in source.lower():
@@ -63,14 +66,20 @@ def prepare(rows: list[dict[str, object]], seed: int = 42) -> dict[str, list[dic
     if not size:
         raise ValueError("Need at least one example in each class")
     rng = random.Random(seed)
-    balanced = grouped[0][:] + grouped[1][:]
     for group in grouped.values():
         rng.shuffle(group)
-    balanced = grouped[0][:size] + grouped[1][:size]
-    rng.shuffle(balanced)
-    train_end = int(len(balanced) * 0.8)
-    val_end = train_end + int(len(balanced) * 0.1)
-    return {"train": balanced[:train_end], "val": balanced[train_end:val_end], "test": balanced[val_end:]}
+    splits = {"train": [], "val": [], "test": []}
+    for label in (0, 1):
+        group = grouped[label][:size]
+        train_end = max(1, int(len(group) * 0.8))
+        val_size = max(1, int(len(group) * 0.1)) if len(group) >= 3 else 0
+        val_end = min(len(group), train_end + val_size)
+        splits["train"].extend(group[:train_end])
+        splits["val"].extend(group[train_end:val_end])
+        splits["test"].extend(group[val_end:])
+    for split in splits.values():
+        rng.shuffle(split)
+    return splits
 
 
 def write_splits(splits: dict[str, list[dict[str, object]]], output_dir: Path) -> None:
@@ -82,13 +91,25 @@ def write_splits(splits: dict[str, list[dict[str, object]]], output_dir: Path) -
             writer.writerows(rows)
 
 
+def write_report(rows: list[dict[str, object]], splits: dict[str, list[dict[str, object]]], output_dir: Path) -> None:
+    counts = {str(label): sum(int(row["label"]) == label for row in rows) for label in (0, 1)}
+    split_counts = {
+        name: {str(label): sum(int(row["label"]) == label for row in split) for label in (0, 1)}
+        for name, split in splits.items()
+    }
+    report = {"total_rows": len(rows), "class_counts": counts, "splits": split_counts}
+    (output_dir / "balance_report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", type=Path, default=Path("data/raw"))
     parser.add_argument("--output-dir", type=Path, default=Path("data/processed"))
     args = parser.parse_args()
     rows = load_rows(args.input_dir)
-    write_splits(prepare(rows), args.output_dir)
+    splits = prepare(rows)
+    write_splits(splits, args.output_dir)
+    write_report(rows, splits, args.output_dir)
     print(f"Wrote normalized data to {args.output_dir}")
 
 

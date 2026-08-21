@@ -45,9 +45,9 @@ def main() -> None:
     trainer = Trainer(model=model, args=training, train_dataset=encoded["train"], eval_dataset=encoded["val"], compute_metrics=metrics, tokenizer=tokenizer)
     trainer.train()
     validation = trainer.predict(encoded["val"])
-    threshold = select_threshold(validation.predictions, encoded["val"]["labels"].numpy())
+    threshold = select_threshold(validation.predictions, np.asarray(encoded["val"]["labels"]))
     final = trainer.evaluate(encoded["test"])
-    labels = encoded["test"]["labels"].numpy()
+    labels = np.asarray(encoded["test"]["labels"])
     predictions = np.argmax(trainer.predict(encoded["test"]).predictions, axis=-1)
     report = {"metrics": {key: float(value) for key, value in final.items() if key.startswith("eval_")}, "confusion_matrix": confusion_matrix(labels, predictions).tolist(), "selected_positive_threshold": threshold, "threshold_note": "Selected on validation data with a 0.90 minimum positive precision target."}
     Path("models").mkdir(exist_ok=True)

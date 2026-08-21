@@ -75,8 +75,13 @@ async def request_logging(request: Request, call_next):
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
-    return {"status": "ok", "service": "civildialog-local"}
+def health() -> dict[str, object]:
+    return {
+        "status": "ok",
+        "service": "civildialog-local",
+        "classifier": "onnx" if classifier.session else "development-fallback",
+        "explainer": "onnx-configured" if explainer.configured else "unavailable-until-model-installed",
+    }
 
 
 @app.post("/check/wordfilter")

@@ -11,4 +11,7 @@ def test_prepare_deduplicates_and_splits():
     splits = prepare(rows)
     flattened = [row["text"] for split in splits.values() for row in split]
     assert len(flattened) == 2
-    assert set(flattened) == {"I disagree with the evidence", "You are an idiot"}
+    assert len(set(flattened)) == 2
+    assert {row["label"] for split in splits.values() for row in split} == {0, 1}
+    assert sum(row["label"] == 0 for split in splits.values() for row in split) == 1
+    assert sum(row["label"] == 1 for split in splits.values() for row in split) == 1
