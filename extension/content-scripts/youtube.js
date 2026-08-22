@@ -5,5 +5,5 @@
     getCommentText: box => box?.innerText || '',
     observeForCommentBox: callback => new MutationObserver(callback).observe(document.body, {subtree: true, childList: true})
   };
-  CivilDialog.intercept(adapter);
+  TrollGate.intercept(adapter);
 })();

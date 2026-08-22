@@ -1,16 +1,16 @@
-# TROLLGATE
+# TROLL GATE
 
 ### A calmer comment section, one reply at a time.
 
-CivilDialog is a browser-based moderation layer that pauses harmful comments before they are posted. It distinguishes a disagreement with an idea from an attack on a person, explains the risk in plain language, and suggests a more constructive rewrite.
+TROLL GATE is a browser-based moderation layer that pauses harmful comments before they are posted. It distinguishes a disagreement with an idea from an attack on a person, explains the risk in plain language, and suggests a more constructive rewrite.
 
 Built for a hackathon, designed as a real integration: a lightweight Chrome extension sits on top of a reusable platform-adapter layer, while a small FastAPI service owns moderation decisions and model orchestration.
 
-![CivilDialog banner](https://dummyimage.com/1200x260/172033/ffffff&text=CivilDialog+%7C+Build+better+conversations)
+![TROLL GATE banner](https://dummyimage.com/1200x260/172033/ffffff&text=TROLL+GATE+%7C+Build+better+conversations)
 
 ## Why this is different
 
-Most moderation tools either block keywords or remove content after the damage is done. CivilDialog works at the moment of intent, with a reversible intervention:
+Most moderation tools either block keywords or remove content after the damage is done. TROLL GATE works at the moment of intent, with a reversible intervention:
 
 - **Context over keywords:** catches person-directed fallacies such as ad hominem attacks, not just banned words.
 - **Explainable intervention:** tells the writer what to change instead of silently judging them.
@@ -22,7 +22,7 @@ Most moderation tools either block keywords or remove content after the damage i
 
 ```mermaid
 flowchart LR
-	A[User writes a reply] --> B{CivilDialog intercepts submit}
+	A[User writes a reply] --> B{TROLL GATE intercepts submit}
 	B --> C[Local word filter]
 	C -->|Matched term| D[Explain blocked wording]
 	C -->|Clear| E[Moderation model]
@@ -57,7 +57,7 @@ flowchart TB
 		WORKER[Background service worker]
 	end
 
-	subgraph CORE[CivilDialog moderation service]
+	subgraph CORE[TROLL GATE moderation service]
 		ROUTER[FastAPI endpoints]
 		FILTER[Blocklist matcher]
 		SCORE[Model scoring contract]
@@ -171,7 +171,7 @@ config/             Local moderation configuration
 
 ## Responsible-use notes
 
-CivilDialog should assist reflection, not decide what opinions are acceptable. Confidence thresholds should be tuned against human-reviewed civil disagreement examples, and users should always be able to edit their wording themselves. Platform DOMs change, so browser integration tests remain part of the maintenance loop.
+TROLL GATE should assist reflection, not decide what opinions are acceptable. Confidence thresholds should be tuned against human-reviewed civil disagreement examples, and users should always be able to edit their wording themselves. Platform DOMs change, so browser integration tests remain part of the maintenance loop.
 
 ## License and data
 

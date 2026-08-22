@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "CivilDialog",
+  "name": "TROLL GATE",
   "version": "2.0.0",
   "description": "Local checks for blocked language and personal attacks before comments are posted.",
   "permissions": ["storage"],

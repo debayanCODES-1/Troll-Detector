@@ -20,13 +20,13 @@ BLOCKLIST_PATH = ROOT / "config" / "blocklist.json"
 LOG_DIR = ROOT / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
-logger = logging.getLogger("civildialog")
+logger = logging.getLogger("troll-gate")
 logger.setLevel(logging.INFO)
 handler = logging.FileHandler(LOG_DIR / "requests.log", encoding="utf-8")
 handler.setFormatter(logging.Formatter("%(message)s"))
 logger.addHandler(handler)
 
-app = FastAPI(title="CivilDialog AI Service", version="3.0.0")
+app = FastAPI(title="TROLL GATE AI Service", version="3.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=r"chrome-extension://[a-zA-Z0-9]+$",
@@ -78,7 +78,7 @@ async def request_logging(request: Request, call_next):
 def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "service": "civildialog-ai",
+        "service": "troll-gate-ai",
         "ai_configured": ai_client.configured,
         "model": ai_client.model,
     }
