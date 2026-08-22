@@ -3,4 +3,8 @@ services:
     build: .
     ports:
       - "127.0.0.1:8787:8787"
+    environment:
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_API_URL: ${AI_API_URL:-https://api.groq.com/openai/v1/chat/completions}
+      AI_MODEL: ${AI_MODEL:-llama-3.1-8b-instant}
     restart: unless-stopped

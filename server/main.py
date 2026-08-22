@@ -11,13 +11,12 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+from .ai import AIClient
 from .explain import LocalExplainer
 from .inference import FallacyClassifier
 
 ROOT = Path(__file__).resolve().parents[1]
 BLOCKLIST_PATH = ROOT / "config" / "blocklist.json"
-MODEL_PATH = ROOT / "models" / "fallacy_classifier.onnx"
-TOKENIZER_PATH = ROOT / "models" / "tokenizer"
 LOG_DIR = ROOT / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
@@ -27,7 +26,7 @@ handler = logging.FileHandler(LOG_DIR / "requests.log", encoding="utf-8")
 handler.setFormatter(logging.Formatter("%(message)s"))
 logger.addHandler(handler)
 
-app = FastAPI(title="CivilDialog Local Inference", version="2.0.0")
+app = FastAPI(title="CivilDialog AI Service", version="3.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=r"chrome-extension://[a-zA-Z0-9]+$",
@@ -35,8 +34,9 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type"],
 )
-classifier = FallacyClassifier(MODEL_PATH, TOKENIZER_PATH)
-explainer = LocalExplainer()
+ai_client = AIClient()
+classifier = FallacyClassifier(ai_client)
+explainer = LocalExplainer(ai_client)
 
 
 class TextRequest(BaseModel):
@@ -78,9 +78,9 @@ async def request_logging(request: Request, call_next):
 def health() -> dict[str, object]:
     return {
         "status": "ok",
-        "service": "civildialog-local",
-        "classifier": "onnx" if classifier.session else "development-fallback",
-        "explainer": "onnx-configured" if explainer.configured else "unavailable-until-model-installed",
+        "service": "civildialog-ai",
+        "ai_configured": ai_client.configured,
+        "model": ai_client.model,
     }
 
 
