@@ -1,4 +1,4 @@
-# CivilDialog
+# TROLLGATE
 
 ### A calmer comment section, one reply at a time.
 
@@ -104,9 +104,9 @@ This project has deliberately evolved in layers:
 
 The model is not treated as a black box. The team built the dataset preparation, moderation prompts/contracts, confidence handling, intervention UI, and platform integrations around it. That combination is the product: the model can improve without rewriting the extension.
 
-## Built for a hackathon
+## Built for the "USERS"
 
-### Demo-ready scope
+### Scope
 
 - Live interception on YouTube, X replies, and Instagram comments
 - Word-filter and fallacy-detection toggles
@@ -114,7 +114,7 @@ The model is not treated as a black box. The team built the dataset preparation,
 - Local health check and Docker deployment
 - Automated tests for dataset preparation and model-response parsing
 
-### A strong judging story
+### KEY POINTS(USP): 
 
 **Problem:** online conversations reward escalation and punish nuance.
 
